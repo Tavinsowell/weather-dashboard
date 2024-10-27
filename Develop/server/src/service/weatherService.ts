@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-// import fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import moment from 'moment';
 
 
@@ -41,9 +41,21 @@ class WeatherService {
     }
   }
   // TODO: Create fetchLocationData method
-  private async fetchLocationData(query: string) {
-    const response = await fetch(query);
-    return await response.json();
+  private async fetchLocationData(city: string): Promise<{ lat: number, lon: number }> {
+    const apiKey = process.env.API_KEY;  // Make sure API_KEY is defined in your .env file
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch location data');
+    }
+  
+    const data: any = await response.json();
+    const { lat, lon } = data.coord;
+    console.log("3 " + data);
+    console.log("4 " + lat);
+    console.log("5 " + lon);
+ 
+    return { lat, lon };
   }
   // TODO: Create destructureLocationData method
   private destructureLocationData(locationData: any): Coordinates {
@@ -58,7 +70,8 @@ class WeatherService {
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(city: string) {
-    const locationData = await this.fetchLocationData(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}`);
+    const locationData = await this.fetchLocationData(city);
+    console.log("1 " + locationData);
     return this.destructureLocationData(locationData);
   }
   // TODO: Create fetchWeatherData method
@@ -93,8 +106,9 @@ class WeatherService {
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
     const coordinates = await this.fetchAndDestructureLocationData(city);
-    const weatherData = await this.fetchWeatherData(coordinates);
-    const currentWeather = this.parseCurrentWeather(weatherData.current);
+    console.log("2 " + coordinates);
+    const weatherData: any = await this.fetchWeatherData(coordinates);
+    const currentWeather = this.parseCurrentWeather(weatherData);
     const forecast = this.buildForecastArray(weatherData);
     return { currentWeather, forecast };
   }

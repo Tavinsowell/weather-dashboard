@@ -42,6 +42,7 @@ const fetchWeather = async (cityName: string) => {
     },
     body: JSON.stringify({ cityName }),
   });
+  console.log('response: ', response);
 
   const weatherData = await response.json();
 
@@ -49,6 +50,7 @@ const fetchWeather = async (cityName: string) => {
 
   renderCurrentWeather(weatherData[0]);
   renderForecast(weatherData.slice(1));
+  console.log(cityName)
 };
 
 const fetchSearchHistory = async () => {
@@ -251,15 +253,18 @@ Event Handlers
 
 const handleSearchFormSubmit = (event: any): void => {
   event.preventDefault();
+  console.log('searchInput.value: ', searchInput.value);
 
   if (!searchInput.value) {
     throw new Error('City cannot be blank');
   }
 
   const search: string = searchInput.value.trim();
-  fetchWeather(search).then(() => {
-    getAndRenderHistory();
-  });
+  console.log('search: ', search);
+  fetchWeather(search) 
+  // .then(() => {
+  //   getAndRenderHistory();
+  // });
   searchInput.value = '';
 };
 
