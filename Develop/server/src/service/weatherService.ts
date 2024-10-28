@@ -48,7 +48,7 @@ class WeatherService {
   }
   // TODO: Create fetchLocationData method
   private async fetchLocationData(city: string): Promise<{ lat: number, lon: number }> {
-    const apiKey = process.env.API_KEY;  // Make sure API_KEY is defined in your .env file
+    const apiKey = process.env.WEATHER_API_KEY;  // Make sure API_KEY is defined in your .env file
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`);
     
     if (!response.ok) {

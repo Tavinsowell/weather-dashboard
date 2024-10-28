@@ -44,18 +44,7 @@ class HistoryService {
  
    
   }
-  //  return await this.read().then((cities) => {
-  //     let parsedCities: City[];
 
-   
-  //     try {
-  //       parsedCities = [].concat(JSON.parse(cities));
-  //     } catch (err) {
-  //       parsedCities = [];
-  //     }
-
-  //     return parsedCities;
-  //   });
 
   // TODO Define an addCity method that adds a city to the searchHistory.json file
   async addCity(city: string) {
