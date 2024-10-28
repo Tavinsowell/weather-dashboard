@@ -45,11 +45,14 @@ const fetchWeather = async (cityName: string) => {
   console.log('response: ', response);
 
   const weatherData = await response.json();
+  const { currentWeather, forecast } = weatherData.weatherData;
 
   console.log('weatherData: ', weatherData);
+  console.log('weather: ', currentWeather);
+  console.log('forecast: ', forecast);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(currentWeather);
+  renderForecast(forecast);
   console.log(cityName)
 };
 
@@ -79,7 +82,19 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+  if (!currentWeather) {
+    console.error('currentWeather is undefined');
+    return;
+  }
+
+  const { city,
+    date, 
+    humidity,
+    icon,
+    iconDescription,
+    temperature,
+    windSpeed
+   } =
     currentWeather;
 
   // convert the following to typescript
@@ -91,7 +106,7 @@ const renderCurrentWeather = (currentWeather: any): void => {
   weatherIcon.setAttribute('alt', iconDescription);
   weatherIcon.setAttribute('class', 'weather-img');
   heading.append(weatherIcon);
-  tempEl.textContent = `Temp: ${tempF}°F`;
+  tempEl.textContent = `Temp: ${temperature}°F`;
   windEl.textContent = `Wind: ${windSpeed} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 
@@ -261,10 +276,9 @@ const handleSearchFormSubmit = (event: any): void => {
 
   const search: string = searchInput.value.trim();
   console.log('search: ', search);
-  fetchWeather(search) 
-  // .then(() => {
-  //   getAndRenderHistory();
-  // });
+  fetchWeather(search).then(() => {
+    getAndRenderHistory();
+  });
   searchInput.value = '';
 };
 
